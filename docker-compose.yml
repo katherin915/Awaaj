@@ -1,0 +1,197 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: awaaz-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: awaaz
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: changeme
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - awaaz-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # MongoDB Express (Web UI for MongoDB)
+  mongo-express:
+    image: mongo-express:1.0.0
+    container_name: awaaz-mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: changeme
+      ME_CONFIG_MONGODB_URL: mongodb://admin:changeme@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: changeme
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - awaaz-network
+    restart: unless-stopped
+
+  # Redis Cache (For notifications and caching)
+  redis:
+    image: redis:7-alpine
+    container_name: awaaz-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - awaaz-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Awaaz AI Service (Python FastAPI)
+  ai_service:
+    build:
+      context: ./backend/ai_service
+      dockerfile: Dockerfile
+    container_name: awaaz-ai-service
+    ports:
+      - "8001:8001"
+    environment:
+      AI_SERVICE_HOST: 0.0.0.0
+      AI_SERVICE_PORT: 8001
+      ENVIRONMENT: development
+      LOG_LEVEL: INFO
+      DEVICE: cpu  # Use 'cuda' if GPU available
+    volumes:
+      - ./backend/ai_service:/app
+      - ai_models_cache:/root/.cache/huggingface
+    networks:
+      - awaaz-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    # Note: First run will download models (~2GB), be patient
+    # Set memory limit if needed: mem_limit: 8g
+
+  # Backend Node.js/Express Server
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: awaaz-backend
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: development
+      PORT: 5000
+      MONGODB_URI: mongodb://admin:changeme@mongodb:27017/awaaz?authSource=admin
+      JWT_SECRET: test_secret_jwt_awaaz_2024
+      CLOUDINARY_NAME: ${CLOUDINARY_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      AI_SERVICE_URL: http://ai_service:8001
+      REDIS_URL: redis://redis:6379
+      ENABLE_AI_CLASSIFICATION: "true"
+      ENABLE_AI_CLUSTERING: "true"
+      ENABLE_AI_PRIORITIZATION: "true"
+      ENABLE_AI_SENTIMENT: "true"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ai_service:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - backend_node_modules:/app/node_modules
+      - backend_uploads:/app/uploads
+    networks:
+      - awaaz-network
+    restart: unless-stopped
+
+  # Frontend React/Vite Development Server
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: awaaz-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://backend:5000
+      VITE_API_URL: http://localhost:5000
+    depends_on:
+      - backend
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - frontend_node_modules:/app/node_modules
+    networks:
+      - awaaz-network
+    restart: unless-stopped
+
+  # PostgreSQL Database (For PostGIS spatial features - Optional)
+  # postgres:
+  #   image: postgis/postgis:15-3.3
+  #   container_name: awaaz-postgres
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_DB: awaaz_spatial
+  #     POSTGRES_USER: awaaz_user
+  #     POSTGRES_PASSWORD: changeme
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - awaaz-network
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U awaaz_user"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   restart: unless-stopped
+
+  # pgAdmin (PostgreSQL Web UI - Optional)
+  # pgadmin:
+  #   image: dpage/pgadmin4:latest
+  #   container_name: awaaz-pgadmin
+  #   ports:
+  #     - "5050:80"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@awaaz.local
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - civix-network
+  #   restart: unless-stopped
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+  redis_data:
+  ai_models_cache:
+  backend_node_modules:
+  backend_uploads:
+  frontend_node_modules:
+  # postgres_data:
+
+networks:
+  awaaz-network:
+    driver: bridge

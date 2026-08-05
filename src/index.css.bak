@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply font-sans text-gray-900 dark:text-gray-100 bg-awaaj-light dark:bg-dark-background antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+  }
+}
+
+@layer components {
+  /* Awaaj Brand Buttons */
+  .btn-awaaj-primary {
+    @apply bg-gradient-awaaj text-white px-8 py-3 rounded-full font-semibold shadow-awaaj hover:shadow-awaaj-lg transform hover:scale-105 transition-all duration-300 hover:-translate-y-1;
+  }
+  
+  .btn-awaaj-secondary {
+    @apply bg-awaaj-secondary text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300;
+  }
+  
+  .btn-awaaj-outline {
+    @apply border-2 border-awaaj-primary text-awaaj-primary px-8 py-3 rounded-full font-semibold hover:bg-gradient-awaaj hover:text-white transition-all duration-300 hover:shadow-awaaj;
+  }
+  
+  /* Cards with Awaaj Theme */
+  .card-awaaj {
+    @apply bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-awaaj transition-all duration-300 border border-gray-100 dark:border-gray-700;
+  }
+  
+  .card-awaaj-hover {
+    @apply card-awaaj hover:transform hover:-translate-y-2 hover:shadow-awaaj-lg;
+  }
+  
+  /* Badge Styles */
+  .badge-awaaj {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-awaaj text-white;
+  }
+  
+  .badge-voice {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-awaaj-accent text-white animate-pulse-slow;
+  }
+  
+  /* Hero Section Gradient */
+  .hero-awaaj {
+    @apply bg-gradient-to-br from-awaaj-primary via-awaaj-accent to-awaaj-secondary relative overflow-hidden;
+  }
+  
+  /* Glassmorphism Effect */
+  .glass-awaaj {
+    @apply bg-white/10 dark:bg-gray-900/30 backdrop-blur-xl border border-white/20 dark:border-gray-700/30;
+  }
+  
+  /* Input Fields */
+  .input-awaaj {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 focus:border-awaaj-primary focus:ring-4 focus:ring-awaaj-primary/20 transition-all duration-300 bg-white dark:bg-gray-800;
+  }
+  
+  /* Section Headers */
+  .section-header-awaaj {
+    @apply text-4xl md:text-5xl font-display font-bold bg-gradient-awaaj bg-clip-text text-transparent mb-4;
+  }
+  
+  /* Voice Wave Animation */
+  .voice-wave {
+    @apply relative;
+  }
+  
+  .voice-wave::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-awaaj opacity-20 animate-pulse-slow rounded-full blur-2xl;
+  }
+}
+
+@layer utilities {
+  /* Text Gradients */
+  .text-gradient-awaaj {
+    @apply bg-gradient-awaaj bg-clip-text text-transparent;
+  }
+  
+  .text-gradient-trust {
+    @apply bg-gradient-trust bg-clip-text text-transparent;
+  }
+  
+  /* Hover Effects */
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+  }
+  
+  .hover-glow {
+    @apply transition-shadow duration-300 hover:shadow-awaaj;
+  }
+}
+
+/* Legacy Support */
+header.bg-white\/95 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-slide-up {
+  animation-name: fadeSlideUp;
+  animation-duration: 500ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: forwards;
+}
+
+/* Custom Scrollbar - Awaaj Theme */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gradient-awaaj rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply opacity-80;
+}

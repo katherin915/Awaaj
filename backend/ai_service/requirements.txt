@@ -1,0 +1,55 @@
+# Awaaz AI Service Dependencies
+# NLP Classification, Semantic Clustering, and Priority Engine
+
+# Web Framework
+fastapi
+uvicorn
+python-dotenv
+pydantic
+
+# Data Processing
+pandas
+numpy
+scipy
+
+# NLP & Machine Learning
+transformers
+torch
+sentence-transformers
+scikit-learn
+nltk
+
+# Clustering & Dimensionality Reduction
+# umap-learn
+# hdbscan
+
+# Database
+pymongo
+motor
+
+# Caching & Queuing
+redis
+celery
+
+# API & Async
+aiohttp
+requests
+httpx
+
+# Utilities
+python-dateutil
+pytz
+tqdm
+
+# Testing
+pytest
+pytest-asyncio
+pytest-cov
+
+# Code Quality
+black
+flake8
+isort
+
+# Logging & Monitoring
+python-logging-loki

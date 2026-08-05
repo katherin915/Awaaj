@@ -1,0 +1,101 @@
+/*
+ * Home.css — custom styles that Tailwind can't handle inline
+ * Everything else uses Tailwind utility classes directly.
+ */
+
+/* Scroll-reveal animation */
+.fade-in-on-scroll {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-in-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Dark-mode CSS variable overrides */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --border: 214.3 31.8% 91.4%;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --border: 217.2 32.6% 17.5%;
+}
+
+/* Hero image cinematic motion */
+.hero-visual-shell {
+  position: relative;
+}
+
+.hero-image-moving {
+  transform-origin: center center;
+  will-change: transform;
+  animation: heroPanZoom 18s ease-in-out infinite alternate;
+}
+
+@keyframes heroPanZoom {
+  0% {
+    transform: scale(1.03) translate3d(0%, 0%, 0);
+  }
+  45% {
+    transform: scale(1.1) translate3d(-2.2%, -1.6%, 0);
+  }
+  100% {
+    transform: scale(1.08) translate3d(2.4%, 1.4%, 0);
+  }
+}
+
+/* Subtle moving light layer */
+.hero-overlay-sheen {
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.08) 8%, rgba(255, 255, 255, 0.22) 24%, rgba(255, 255, 255, 0.08) 40%);
+  background-size: 220% 100%;
+  mix-blend-mode: soft-light;
+  animation: heroSheen 7s linear infinite;
+}
+
+@keyframes heroSheen {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+/* Floating KPI cards */
+.hero-float-one,
+.hero-float-two {
+  animation: heroFloat 4.2s ease-in-out infinite;
+}
+
+.hero-float-two {
+  animation-delay: 0.6s;
+}
+
+@keyframes heroFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-image-moving,
+  .hero-overlay-sheen,
+  .hero-float-one,
+  .hero-float-two {
+    animation: none !important;
+    transform: none !important;
+  }
+}
