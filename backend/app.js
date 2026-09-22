@@ -27,6 +27,7 @@ const defaultOrigins = [
   "http://localhost:3001",
   "http://localhost:5173",
   "https://awaaz-phi.vercel.app",
+  "https://awaaj-liart.vercel.app",
 ];
 
 const envOrigins = (process.env.CORS_ORIGINS || process.env.FRONTEND_URL || "")
