@@ -70,10 +70,10 @@ const Footer = () => {
             {/* Social / contact */}
             <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
               <a
-                href="mailto:support@awaaz.com"
+                href="mailto:foundersetu@gmail.com"
                 className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
               >
-                <Mail className="w-3.5 h-3.5" /> support@awaaz.com
+                <Mail className="w-3.5 h-3.5" /> foundersetu@gmail.com
               </a>
               <a
                 href="tel:+15551234567"
@@ -82,12 +82,12 @@ const Footer = () => {
                 <Phone className="w-3.5 h-3.5" /> +1 (555) 123-4567
               </a>
               <span className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5" /> Bangalore, India
+                <MapPin className="w-3.5 h-3.5" /> Greater Noida, India
               </span>
             </div>
 
             <a
-              href="https://github.com/HarshS16/Awaaz"
+              href="https://github.com/gauravmishra2744/Awaaj"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
@@ -162,7 +162,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="text-gray-600 dark:text-gray-300 hover:underline"
             >
-              Gaurav Mishra
+              Creators team
             </a>
           </span>
         </div>
